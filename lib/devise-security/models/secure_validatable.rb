@@ -24,7 +24,7 @@ module Devise
 
           # validate login in a strict way if not yet validated
           unless has_uniqueness_validation_of_login?
-            validation_condition = "#{login_attribute}_changed?".to_sym
+            validation_condition = "will_save_change_to_#{login_attribute}?".to_sym
 
             validates login_attribute, uniqueness: {
                                           scope:          authentication_keys[1..-1],
@@ -38,7 +38,7 @@ module Devise
           unless devise_validation_enabled?
             validates :email, presence: true, if: :email_required?
             unless already_validated_email
-              validates :email, uniqueness: true, allow_blank: true, if: :email_changed? # check uniq for email ever
+              validates :email, uniqueness: true, allow_blank: true, if: :will_save_change_to_email? # check uniq for email ever
             end
 
             validates :password, presence: true, length: password_length, confirmation: true, if: :password_required?
